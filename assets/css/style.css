@@ -1,5 +1,13 @@
 #lootPics{
-    width: 200px;
-    height: 200px;
+    padding: 30px;
+    width: 255px;
+    height: 255px;
+    object-fit: contain;
+}
+
+#game-start{
+    padding: 10px;
+    width: 400px;
+    height: 400px;
     object-fit: contain;
 }
