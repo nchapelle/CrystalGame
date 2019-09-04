@@ -4,7 +4,7 @@
 //
 var highscore = 15;
 var danger = 0;
-var countdown = 10;
+var countdown = 15;
 var roundScore = 0;
 var intervalId;
 //on load 
@@ -31,9 +31,15 @@ if (countdown === 0) {
     dragonGO.attr("id", "game-over")
     $("#dragon").empty();
     $(".row").empty();
+    time.stop();
     roundScore = 0;
     danger = 0;
+    countdown = 15;
     $("#dragon").append(dragonGO);
+    $("#game-over").on("click", function(){
+        $("#dragon").empty();
+        choices.startGame();
+    });
 }
     }
 }
@@ -67,12 +73,12 @@ var dragon = {
             time.stop();
             $("#dragon").empty();
             dragon.knows();
-            danger++
-            console.log("Round Score: " + roundScore)
-            console.log("Danger: " + danger)
-            countdown = 10 - danger
-            $(".timer").html("<h2> checkround: " + countdown + "</h2>"); //to let us know what timer is being called
-
+            danger++;
+            console.log("Round Score: " + roundScore);
+            console.log("Danger: " + danger);
+            countdown = 10 - danger;
+            // $(".timer").html("<h2> checkround: " + countdown + "</h2>"); //to let us know what timer is being called
+            time.run();
         }
     },
     timeUP: function () {
@@ -126,6 +132,10 @@ var choices = {
             console.log("Correct Choice, game start!");
             treasurePile.lootPiles();
             $("#modal-button").hide();
+            time.run();
+            time.decrement();
+            // $(".timer").html("<h2> start" + countdown + "</h2>");
+
         });
     },
 
@@ -199,10 +209,12 @@ var treasurePile = {
                     console.log("Is this your first time here?")
                     delayButtonAlert = setTimeout(function () {
                         alert("New High Score. Take a Screenshot! High Score: " + highscore);
-                        $(".row").empty(); choices.startGame();
+                        $(".row").empty(); $("#dragon").empty(); choices.startGame();
                     }, 100);
                     $("#highscore").text("High Score: " + highscore)
                     time.stop();
+                    countdown = 15;
+                    danger = 0;
                     $("#modal-button").show();
 
 
@@ -211,10 +223,12 @@ var treasurePile = {
                 else {
                     delayButtonAlert = setTimeout(function () {
                         alert("You escaped with your treasures. Your score is: " + roundScore);
-                        $(".row").empty(); choices.startGame();
+                        $(".row").empty(); $("#dragon").empty(); choices.startGame();
                         // choices.startGame(); //this is now buried within the scope of the second click event
                     }, 100);
                     time.stop();
+                    countdown = 15; 
+                    danger = 0;
                     $("#modal-button").show();
 
                 }
@@ -225,16 +239,23 @@ var treasurePile = {
             else if (treasureValue === 5) {
                 console.log("Greedy.");
                 danger++;
+                time.stop();
                 dragon.checkRound();
+                time.decrement();
+
 
             }
             else {
                 if (roundScore > 5) {
+                    time.stop();
                     dragon.checkRound();
+                    time.decrement();
                 }
                 else {
+                    time.stop();
                     dragon.checkRound();
                     console.log("You sneaky bastard.");
+
                 };
             };
             $(".row").empty();
