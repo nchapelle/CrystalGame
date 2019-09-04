@@ -3,7 +3,8 @@
 //treasure piles
 //
 var highscore = 15;
-var danger = 10000;
+var danger = 0;
+var countdown = 10000;
 var roundScore = 0;
 var intervalId;
 //on load 
@@ -21,7 +22,25 @@ var dragon = {
     },
     dragonDelayed: function () {
         clearTimeout()//something goes in here-- variable that is dragon timer)
-    }
+    },
+    knows: function(){
+        var dragonImg = $("<img>")
+        dragonImg.addClass("col")
+        dragonImg.attr("src", dragon.images[0])
+        dragonImg.attr("id", "heKnows")
+        $("#dragon").append(dragonImg)
+    },
+
+    checkRound: function(){
+        if (roundScore >= 5){
+            $("#dragon").empty();
+            dragon.knows();
+            danger++
+            console.log("Round Score: " + roundScore)
+            console.log("Danger: " + danger)
+            countdown = 10000 - (danger * 1000) 
+        }
+    },
 
 };
 
@@ -66,7 +85,7 @@ var choices = {
     startGame: function () {
         choices.goHome();
         choices.lootStart();
-        console.log("Need better styling")
+        // console.log("Need better styling")
     }
 
 
@@ -125,7 +144,6 @@ var treasurePile = {
             treasureValue = parseInt(treasureValue);
             roundScore += treasureValue;
             console.log("Treasure Value: " + treasureValue);
-            console.log("Round Score: " + roundScore);
 
             if (treasureValue === 0) { console.log("Cave Entrance Clicked.")
                 if (roundScore > highscore) { 
@@ -155,14 +173,14 @@ var treasurePile = {
             else if (treasureValue === 5) {
                     console.log("Greedy.");
                     danger++;
-                    //roundchecker;
+                    dragon.checkRound();
                     }
             else {
                     if (roundScore > 5) {
-                        danger++
-                        //roundchecker;
+                        dragon.checkRound();
                     }
                     else {
+                        
                         console.log("You sneaky bastard.");
                     };
                 };

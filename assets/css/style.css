@@ -13,3 +13,11 @@
     object-fit: contain;
     align-self: center;
 }
+
+#heKnows{
+    padding: 30px;
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+    align-self: center;
+}
