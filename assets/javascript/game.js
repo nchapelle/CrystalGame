@@ -4,16 +4,47 @@
 //
 var highscore = 15;
 var danger = 0;
-var countdown = 10000;
+var countdown = 10;
 var roundScore = 0;
 var intervalId;
 //on load 
+var time = {
+    run: function(){
+        clearInterval(intervalId); 
+        intervalId = setInterval(time.decrement, 1000);
+    },
+    stop: function () {
+        clearInterval(intervalId);
+    },
+    decrement: function(){
+        countdown--;
 
+$(".timer").html("<h2>" + countdown + "</h2>");
+// $(".timer").hide()
+if (countdown === 0) {
+    time.stop();
+    dragon.timeUP();
+
+    alert("Time Up!");
+    var dragonGO = $("<img>");
+    dragonGO.attr("src", dragon.images[1]);
+    dragonGO.attr("id", "game-over")
+    $("#dragon").empty();
+    $(".row").empty();
+    roundScore = 0;
+    danger = 0;
+    $("#dragon").append(dragonGO);
+}
+    }
+}
 var dragon = {
     images: ["assets/images/dragonKnows.gif", "assets/images/gameOver.gif"],
     countdown: function () {
-        //start countdown 
-        //adjust based on danger
+       time.run();
+        clearInterval(intervalId); //
+        intervalId = setInterval(time.decrement, 1000);
+
+        setTimeout(dragon.timeUP, countdown)
         //alert that game is over
         //delay inevitable
         //empty game box 
@@ -23,7 +54,7 @@ var dragon = {
     dragonDelayed: function () {
         clearTimeout()//something goes in here-- variable that is dragon timer)
     },
-    knows: function(){
+    knows: function () {
         var dragonImg = $("<img>")
         dragonImg.addClass("col")
         dragonImg.attr("src", dragon.images[0])
@@ -31,24 +62,38 @@ var dragon = {
         $("#dragon").append(dragonImg)
     },
 
-    checkRound: function(){
-        if (roundScore >= 5){
+    checkRound: function () {
+        if (roundScore >= 5) {
+            time.stop();
             $("#dragon").empty();
             dragon.knows();
             danger++
             console.log("Round Score: " + roundScore)
             console.log("Danger: " + danger)
-            countdown = 10000 - (danger * 1000) 
+            countdown = 10 - danger
+            $(".timer").html("<h2> checkround: " + countdown + "</h2>"); //to let us know what timer is being called
+
         }
     },
+    timeUP: function () {
+        // var dragonGO = $("<img>");
+        // dragonGO.attr("src", dragon.images[1]);
+        // dragonGO.attr("id", "game-over")
+        // $("#dragon").empty();
+        // $(".row").empty();
+        // roundScore = 0;
+        // danger = 0;
+        // $("#dragon").append(dragonGO)
+    }
 
 };
 
 var choices = {
     goHome: function () {
         var goHome = $("<div>");
-        goHome.addClass("col");
+        goHome.addClass("col text-center");
         goHome.attr("data-value", "0");
+        goHome.attr("id", "cardBG")
         var goHomeImg = $("<img>");
         goHomeImg.attr("src", "assets/images/cave_entranceCA.jpg");
         goHomeImg.attr("id", "no-game");
@@ -60,15 +105,16 @@ var choices = {
                 alert("You have wasted your opportunity.");
                 $(".row").empty();
             }, 1000);
-           
+
         });
-        
+
     },
 
     lootStart: function () {
         var lootStart = $("<div>");
-        lootStart.addClass("col");
+        lootStart.addClass("col text-center");
         lootStart.attr("data-value", "1");
+        lootStart.attr("id", "cardBG")
         var lootStartImg = $("<img>");
         lootStartImg.attr("src", "assets/images/golden_entry.jpg");
         lootStartImg.attr("id", "Go-Time");
@@ -79,6 +125,7 @@ var choices = {
             $(".row").empty();
             console.log("Correct Choice, game start!");
             treasurePile.lootPiles();
+            $("#modal-button").hide();
         });
     },
 
@@ -139,22 +186,25 @@ var treasurePile = {
 
 
         };
-        $(".btn").on("click", function(){
+        $(".btn").on("click", function () {
             var treasureValue = ($(this).attr("data-value")); //something is wrong with this function, I believe that values are not being read properly it could be the if/else arguments. 
             treasureValue = parseInt(treasureValue);
             roundScore += treasureValue;
             console.log("Treasure Value: " + treasureValue);
 
-            if (treasureValue === 0) { console.log("Cave Entrance Clicked.")
-                if (roundScore > highscore) { 
-                    highscore = roundScore 
+            if (treasureValue === 0) {
+                console.log("Cave Entrance Clicked.")
+                if (roundScore > highscore) {
+                    highscore = roundScore
                     console.log("Is this your first time here?")
                     delayButtonAlert = setTimeout(function () {
                         alert("New High Score. Take a Screenshot! High Score: " + highscore);
                         $(".row").empty(); choices.startGame();
                     }, 100);
                     $("#highscore").text("High Score: " + highscore)
-                    
+                    time.stop();
+                    $("#modal-button").show();
+
 
                     // choices.startGame(); //this is now buried within the scope of the second click event
                 }
@@ -164,33 +214,36 @@ var treasurePile = {
                         $(".row").empty(); choices.startGame();
                         // choices.startGame(); //this is now buried within the scope of the second click event
                     }, 100);
-                    
+                    time.stop();
+                    $("#modal-button").show();
+
                 }
 
 
 
             }
             else if (treasureValue === 5) {
-                    console.log("Greedy.");
-                    danger++;
-                    dragon.checkRound();
-                    }
+                console.log("Greedy.");
+                danger++;
+                dragon.checkRound();
+
+            }
             else {
-                    if (roundScore > 5) {
-                        dragon.checkRound();
-                    }
-                    else {
-                        
-                        console.log("You sneaky bastard.");
-                    };
+                if (roundScore > 5) {
+                    dragon.checkRound();
+                }
+                else {
+                    dragon.checkRound();
+                    console.log("You sneaky bastard.");
                 };
+            };
             $(".row").empty();
             treasurePile.lootPiles();
         });
     },
 
-    lootValue: function(){
-        
+    lootValue: function () {
+
         console.log("Nice Click.");
         var treasureValue = ($(this).attr("data-value"));
         console.log(treasureValue)
@@ -200,14 +253,15 @@ var treasurePile = {
 };
 
 onLoad = choices.startGame(),
-$(document).ready(function () {
+    $(document).ready(function () {
+    
+    $("#exampleModalCenter").modal();
+    
 
+    // dragon.countdown();
+    
 
-
-
-
-
-    // choices.startGame();
+        // choices.startGame();
     });
 
     //   <div class="row">
@@ -231,3 +285,4 @@ $(document).ready(function () {
     //     </div>
     //   </div>
     // </div>
+    
