@@ -2,7 +2,7 @@
 //end game, count total, log score, restart game?
 //treasure piles
 //
-var highscore = 0;
+var highscore = 15;
 var danger = 10000;
 var roundScore = 0;
 var intervalId;
@@ -36,6 +36,14 @@ var choices = {
         goHomeImg.attr("data-value", "0")
         $(goHome).append(goHomeImg);
         $(".row").append(goHome);
+        $("#no-game").on("click", function () {
+            delayButtonAlert = setTimeout(function () {
+                alert("You have wasted your opportunity.");
+                $(".row").empty();
+            }, 1000);
+           
+        });
+        
     },
 
     lootStart: function () {
@@ -48,6 +56,11 @@ var choices = {
         lootStartImg.attr("data-value", "1");
         $(lootStart).append(lootStartImg);
         $(".row").append(lootStart);
+        $("#Go-Time").on("click", function () {
+            $(".row").empty();
+            console.log("Correct Choice, game start!");
+            treasurePile.lootPiles();
+        });
     },
 
     startGame: function () {
@@ -107,9 +120,59 @@ var treasurePile = {
 
 
         };
+        $(".btn").on("click", function(){
+            var treasureValue = ($(this).attr("data-value")); //something is wrong with this function, I believe that values are not being read properly it could be the if/else arguments. 
+            treasureValue = parseInt(treasureValue);
+            roundScore += treasureValue;
+            console.log("Treasure Value: " + treasureValue);
+            console.log("Round Score: " + roundScore);
+
+            if (treasureValue === 0) { console.log("Cave Entrance Clicked.")
+                if (roundScore > highscore) { 
+                    highscore = roundScore 
+                    console.log("Is this your first time here?")
+                    delayButtonAlert = setTimeout(function () {
+                        alert("New High Score. Take a Screenshot! High Score: " + highscore);
+                        $(".row").empty(); choices.startGame();
+                    }, 100);
+                    $("#highscore").text("High Score: " + highscore)
+                    
+
+                    // choices.startGame(); //this is now buried within the scope of the second click event
+                }
+                else {
+                    delayButtonAlert = setTimeout(function () {
+                        alert("You escaped with your treasures. Your score is: " + roundScore);
+                        $(".row").empty(); choices.startGame();
+                        // choices.startGame(); //this is now buried within the scope of the second click event
+                    }, 100);
+                    
+                }
+
+
+
+            }
+            else if (treasureValue === 5) {
+                    console.log("Greedy.");
+                    danger++;
+                    //roundchecker;
+                    }
+            else {
+                    if (roundScore > 5) {
+                        danger++
+                        //roundchecker;
+                    }
+                    else {
+                        console.log("You sneaky bastard.");
+                    };
+                };
+            $(".row").empty();
+            treasurePile.lootPiles();
+        });
     },
 
     lootValue: function(){
+        
         console.log("Nice Click.");
         var treasureValue = ($(this).attr("data-value"));
         console.log(treasureValue)
@@ -119,70 +182,14 @@ var treasurePile = {
 };
 
 onLoad = choices.startGame(),
-    $(document).ready(function () {
-
-
-
-        $("#Go-Time").on("click", function () {
-            $(".row").empty();
-            console.log("Correct Choice, game start!");
-            treasurePile.lootPiles();
-            $(".btn").on("click", function(){
-                var treasureValue = ($(this).attr("data-value")); //something is wrong with this function, I believe that values are not being read properly it could be the if/else arguments. 
-                treasureValue = parseInt(treasureValue);
-                roundScore += treasureValue;
-                console.log("Treasure Value: " + treasureValue);
-                console.log("Round Score: " + roundScore);
-
-                if (treasureValue === 0) { console.log("Cave Entrance Clicked.")
-                    if (roundScore > highscore) { console.log("Is this your first time here?")
-                        highscore = roundScore;
-                        delayButtonAlert = setTimeout(function () {
-                            alert("New High Score. Take a Screenshot! High Score: " + highscore);
-                            $(".row").empty();
-                        }, 1000);
-                        $("#highscore").text("High Score: " + highscore)
-
-                        choices.startGame(); //this is now buried within the scope of the second click event
-                    }
-                    else {
-                        alert("You escaped with your treasures. Your score is: " + roundScore)
-                        $("#game-box").empty();
-                        choices.startGame(); //this is now buried within the scope of the second click event
-                    }
-
-
-
-                }
-                else if (treasureValue === 5) {
-                        console.log("Greedy.");
-                        danger++;
-                        //roundchecker;
-                        }
-                else {
-                        if (roundScore > 5) {
-                            danger++
-                            //roundchecker;
-                        }
-                        else {
-                            console.log("You sneaky bastard.");
-                        };
-                    };
-            });
-
-        });
-
-        $("#no-game").on("click", function () {
-            delayButtonAlert = setTimeout(function () {
-                alert("You have wasted your opportunity.");
-                $(".row").empty();
-            }, 1000);
-           
-        });
+$(document).ready(function () {
 
 
 
 
+
+
+    // choices.startGame();
     });
 
     //   <div class="row">
