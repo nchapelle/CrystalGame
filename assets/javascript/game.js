@@ -111,6 +111,8 @@ var treasurePile = {
 
     lootValue: function(){
         console.log("Nice Click.");
+        var treasureValue = ($(this).attr("data-value"));
+        console.log(treasureValue)
     },
 
 
@@ -121,11 +123,9 @@ onLoad = choices.startGame(),
 
         $("#next-round").on("click", function(){
             console.log("nice click")
-        });
+        }); 
 
         $("#Go-Time").on("click", function () {
-            console.log("we are clicking");
-
             $(".row").empty();
             console.log("Correct Choice, game start!");
             treasurePile.lootPiles();
