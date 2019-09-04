@@ -97,7 +97,7 @@ var treasurePile = {
             var bodyText = $("<p>");
             bodyText.addClass("card-text");
             bodyText.text(treasurePile.description[x])
-            var bodyBtn = $("<buttons>");
+            var bodyBtn = $("<button>");
             bodyBtn.addClass("btn btn-primary");
             bodyBtn.attr("data-value", treasurePile.value[x]);
             bodyBtn.attr("id", "next-round")
@@ -121,15 +121,54 @@ var treasurePile = {
 onLoad = choices.startGame(),
     $(document).ready(function () {
 
-        $("#next-round").on("click", function(){
-            console.log("nice click")
-        }); 
+
 
         $("#Go-Time").on("click", function () {
             $(".row").empty();
             console.log("Correct Choice, game start!");
             treasurePile.lootPiles();
+            $(".btn").on("click", function(){
+                var treasureValue = ($(this).attr("data-value")); //something is wrong with this function, I believe that values are not being read properly it could be the if/else arguments. 
+                treasureValue = parseInt(treasureValue);
+                roundScore += treasureValue;
+                console.log("Treasure Value: " + treasureValue);
+                console.log("Round Score: " + roundScore);
 
+                if (treasureValue === 0) { console.log("Cave Entrance Clicked.")
+                    if (roundScore > highscore) { console.log("Is this your first time here?")
+                        highscore = roundScore;
+                        delayButtonAlert = setTimeout(function () {
+                            alert("New High Score. Take a Screenshot! High Score: " + highscore);
+                            $(".row").empty();
+                        }, 1000);
+                        $("#highscore").text("High Score: " + highscore)
+
+                        choices.startGame(); //this is now buried within the scope of the second click event
+                    }
+                    else {
+                        alert("You escaped with your treasures. Your score is: " + roundScore)
+                        $("#game-box").empty();
+                        choices.startGame(); //this is now buried within the scope of the second click event
+                    }
+
+
+
+                }
+                else if (treasureValue === 5) {
+                        console.log("Greedy.");
+                        danger++;
+                        //roundchecker;
+                        }
+                else {
+                        if (roundScore > 5) {
+                            danger++
+                            //roundchecker;
+                        }
+                        else {
+                            console.log("You sneaky bastard.");
+                        };
+                    };
+            });
 
         });
 
@@ -140,44 +179,7 @@ onLoad = choices.startGame(),
             }, 1000);
            
         });
-        // var treasureValue = ($(this).attr("data-value")); //something is wrong with this function, I believe that values are not being read properly it could be the if/else arguments. 
-        // treasureValue = parseInt(treasureValue);
-        // roundScore += treasureValue;
-        // console.log("Treasure Value: " + treasureValue);
-        // console.log("Round Score: " + roundScore);
 
-        // if (treasureValue === 0) { console.log("Cave Entrance Clicked.")
-        //     if (roundScore > highscore) { console.log("Is this your first time here?")
-        //         highscore = roundScore;
-        //         alert("New High Score. Take a Screenshot! High Score: " + highscore)
-        //         $("#highscore").text("High Score: " + highscore)
-        //         //delay 
-        //         $("#game-box").empty();
-        //         choices.startGame();
-        //     }
-        //     else {
-        //         alert("You escaped with your treasures. Your score is: " + roundScore)
-        //         $("#game-box").empty();
-        //         choices.startGame();
-        //     }
-
-
-
-        // }
-        // else if (treasureValue === 5) {
-        //         console.log("Greedy.");
-        //         danger++;
-        //         //roundchecker;
-        //         }
-        // else {
-        //         if (roundScore > 5) {
-        //             danger++
-        //             //roundchecker;
-        //         }
-        //         else {
-        //             console.log("You sneaky bastard.");
-        //         };
-        //     };
 
 
 
