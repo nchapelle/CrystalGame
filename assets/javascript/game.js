@@ -19,7 +19,6 @@ var time = {
 // $(".timer").hide()
 if (countdown === 0) {
     time.stop();
-    dragon.timeUP();
 
     alert("Time Up!");
     var dragonGO = $("<img>");
@@ -41,7 +40,19 @@ if (countdown === 0) {
 }
 var dragon = {
     images: ["assets/images/dragonKnows.gif", "assets/images/gameOver.gif"],
-  
+    countdown: function () {
+       time.run();
+        clearInterval(intervalId); //
+        intervalId = setInterval(time.decrement, 1000);
+
+        setTimeout(dragon.timeUP, countdown)
+        //alert that game is over
+        //delay inevitable
+        //empty game box 
+        // reset RoundScore 
+        console.log("...roooaaarrr...")
+    },
+
     knows: function () {
         var dragonImg = $("<img>")
         dragonImg.addClass("col")
@@ -62,8 +73,9 @@ var dragon = {
             // $(".timer").html("<h2> checkround: " + countdown + "</h2>"); //to let us know what timer is being called
             time.run();
         }
-    }
-   
+    },
+    
+
 };
 
 var choices = {
@@ -175,13 +187,13 @@ var treasurePile = {
             console.log("Treasure Value: " + treasureValue);
 
             if (treasureValue === 0) {
-                // console.log("Cave Entrance Clicked.")
+                console.log("Cave Entrance Clicked.")
                 if (roundScore > highscore) {
                     highscore = roundScore
-                    // console.log("Is this your first time here?")
+                    console.log("Is this your first time here?")
                     delayButtonAlert = setTimeout(function () {
                         alert("New High Score. Take a Screenshot! High Score: " + highscore);
-                        $(".row").empty(); $("#dragon").empty(); choices.startGame();
+                        $(".row").empty(); $("#dragon").empty(); roundScore = 0; choices.startGame();
                     }, 100);
                     $("#highscore").text("High Score: " + highscore)
                     time.stop();
@@ -251,7 +263,31 @@ onLoad = choices.startGame(),
     $("#exampleModalCenter").modal();
     
 
-});
+    // dragon.countdown();
+    
 
- 
+        // choices.startGame();
+    });
+
+    //   <div class="row">
+    //   <div class="col-xs-12 col-lg-3" id="game-box">
+    //     <div class="card">
+    //       <img src="..." class="card-img-top" alt="...">
+    //       <div class="card-body">
+    //         <h5 class="card-title">Special title treatment</h5>
+    //         <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    //         <a href="#" class="btn btn-primary">Go somewhere</a>
+    //       </div>
+    //     </div>
+    //   </div>
+    //   <div class="col-sm-6">
+    //     <div class="card">
+    //       <div class="card-body">
+    //         <h5 class="card-title">Special title treatment</h5>
+    //         <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    //         <a href="#" class="btn btn-primary">Go somewhere</a>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
     
