@@ -33,6 +33,7 @@ if (countdown === 0) {
     $("#dragon").append(dragonGO);
     $("#game-over").on("click", function(){
         $("#dragon").empty();
+        $(".row").empty();
         choices.startGame();
     });
 }
@@ -93,7 +94,7 @@ var choices = {
         $("#no-game").on("click", function () {
             delayButtonAlert = setTimeout(function () {
                 alert("You have wasted your opportunity.");
-                $(".row").empty();
+                $(".row").empty(); choices.startGame();
             }, 1000);
 
         });
@@ -207,7 +208,7 @@ var treasurePile = {
                 else {
                     delayButtonAlert = setTimeout(function () {
                         alert("You escaped with your treasures. Your score is: " + roundScore);
-                        $(".row").empty(); $("#dragon").empty(); choices.startGame();
+                        $(".row").empty(); $("#dragon").empty(); roundScore = 0; choices.startGame();
                         // choices.startGame(); //this is now buried within the scope of the second click event
                     }, 100);
                     time.stop();
@@ -230,7 +231,7 @@ var treasurePile = {
 
             }
             else {
-                if (roundScore > 5) {
+                if (roundScore > 10) {
                     time.stop();
                     dragon.checkRound();
                     time.decrement();
