@@ -41,7 +41,7 @@ if (countdown === 0) {
 }
 var dragon = {
     images: ["assets/images/dragonKnows.gif", "assets/images/gameOver.gif"],
-    countdown: function () {
+    countdown: function () { //we replaced this with a working "time" object to handle the functionality we were working on
        time.run();
         clearInterval(intervalId); //
         intervalId = setInterval(time.decrement, 1000);
