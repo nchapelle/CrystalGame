@@ -191,12 +191,18 @@ var treasurePile = {
                 console.log("Cave Entrance Clicked.")
                 if (roundScore > highscore) {
                     highscore = roundScore
+                    //log to local storage
+                    localStorage.setItem("highscore", highscore);
+
                     console.log("Is this your first time here?")
                     delayButtonAlert = setTimeout(function () {
                         alert("New High Score. Take a Screenshot! High Score: " + highscore);
                         $(".row").empty(); $("#dragon").empty(); roundScore = 0; choices.startGame();
                     }, 100);
-                    $("#highscore").text("High Score: " + highscore)
+                    // $("#highscore").text("High Score: " + highscore)
+                    //change to local storage
+                    $("#highscore").text(localStorage.getItem("highscore"));
+
                     time.stop();
                     countdown = 15;
                     danger = 0;
