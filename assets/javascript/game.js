@@ -41,18 +41,6 @@ if (countdown === 0) {
 }
 var dragon = {
     images: ["assets/images/dragonKnows.gif", "assets/images/gameOver.gif"],
-    countdown: function () { //we replaced this with a working "time" object to handle the functionality we were working on
-       time.run();
-        clearInterval(intervalId); //
-        intervalId = setInterval(time.decrement, 1000);
-
-        setTimeout(dragon.timeUP, countdown)
-        //alert that game is over
-        //delay inevitable
-        //empty game box 
-        // reset RoundScore 
-        console.log("...roooaaarrr...")
-    },
 
     knows: function () {
         var dragonImg = $("<img>")
@@ -201,7 +189,7 @@ var treasurePile = {
                     }, 100);
                     // $("#highscore").text("High Score: " + highscore)
                     //change to local storage
-                    $("#highscore").text(localStorage.getItem("highscore"));
+                    $("#highscore").text("High Score: " + localStorage.getItem("highscore"));
 
                     time.stop();
                     countdown = 15;
